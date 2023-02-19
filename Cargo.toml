@@ -1,0 +1,18 @@
+
+[package]
+name = "voidgrinder"
+version = "0.1.0"
+authors = ["nazgull08 <nazgull08@protonmail.com"]
+edition = "2021"
+
+
+[[bin]]
+name = "voidgrinder"
+path = "src/main.rs"
+
+[dependencies]
+log = { version = "^0.4.17"}
+serde = { version = "1.0", features = ["derive"] }
+serde_json = { version = "1.0", features = ["arbitrary_precision"] }
+bevy = "0.9" 
+rand = "0.8.5"
