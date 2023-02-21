@@ -2,11 +2,12 @@
 
 use bevy::prelude::*;
 use bevy_rapier3d::{prelude::{RapierPhysicsPlugin, NoUserData, Collider, RapierContext, QueryFilter, RigidBody, Velocity, ExternalForce, Damping}, render::RapierDebugRenderPlugin};
-use voidgrinder::{camera::{pan_orbit_camera, spawn_camera}, control::{types::{HoveredEntity, SelectedEntity, Selected}, hover::hovered_entity_tracker, select::selected_entity_tracker}, ui::{stats::stats_setup, button::{setup_button, button_system}}};
+use voidgrinder::{camera::{pan_orbit_camera, spawn_camera}, control::{types::{HoveredEntity, SelectedEntity, Selected}, hover::hovered_entity_tracker, select::selected_entity_tracker}, ui::{stats::stats_setup, button::{setup_button, button_system}}, world::Game, events::*, units::ball::spawn_ball, player};
 
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
+        .add_event::<SpawnBall>()
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::default())
         .add_plugin(RapierDebugRenderPlugin::default())
         .add_startup_system(setup_light)
@@ -32,6 +33,7 @@ fn main() {
         .add_system(selected_entity_tracker)
         .add_system(move_selected)
         .add_system(button_system)
+        .add_system(spawn_ball)
         .run();
 }
 
@@ -42,19 +44,10 @@ struct MoveCDTimer(Timer);
 struct CameraTrackerTimer(Timer);
 
 
-#[derive(Resource, Default)]
-pub struct Game {
-    players: Vec<Option<Entity>>,
-    ground: Option<Entity>,
-    score: i32,
-    cake_eaten: u32,
-}
 
 /// set up a simple 3D scene
 fn setup_light(
     mut commands: Commands,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
     // plane
     // light
@@ -83,28 +76,26 @@ fn clean_forces(
     time: Res<Time>,
     mut timer: ResMut<MoveCDTimer>,
     mut commands: Commands,
-    ext_forces: Query<&ExternalForce>,
+    mut ext_forces: Query<&mut ExternalForce>,
     vel_query: Query<&mut Velocity>,
     game_state: ResMut<Game>
 ) {
     if !timer.0.tick(time.delta()).finished() {
         return;
     }
+
     for splayer in &game_state.players{
-       match splayer {
-           None => {},
-           Some(player) => {
-               if let Ok(ext_f) = ext_forces.get(player.to_owned()) {
-                   info!("player: {:?}, force: {:?}",player, ext_f);
-                   commands.entity(player.to_owned()).remove::<ExternalForce>();
-               }
-               if let Ok(vel) = vel_query.get(player.to_owned()) {
-                   info!("player: {:?}, velocity: {:?}",player, vel);
-                   //commands.entity(player.to_owned()).remove::<ExternalForce>();
-               }
-           }
-       }
-   }
+        match splayer {
+            None => {},
+            Some(player) => {
+                if let Ok(mut ext_force) = ext_forces.get_mut(player.to_owned()){
+                    ext_force.force = Vec3::new(0.0,0.0,0.0);
+                    ext_force.torque = Vec3::new(0.0,0.0,0.0);
+                    info!("player: {:?}, force:{:?}",player,ext_force);
+                }
+            }
+        }
+    }
 }
 
 pub fn setup_physics(mut commands: Commands,
@@ -128,8 +119,8 @@ pub fn setup_physics(mut commands: Commands,
     let gmin_y = 0.0 - ground_height;
     let gmax_y = 0.0 + ground_height;
 
-    let dld = 10.0;
-    let dad = 10.0;
+    let dld = 0.5;
+    let dad = 0.5;
 
     game_state.ground = Some(commands.spawn(PbrBundle {
         mesh: meshes.add(Mesh::from(shape::Box{max_x:gmax_x
@@ -339,7 +330,7 @@ fn move_selected(
                         if let Ok(sel) = query.get(player.to_owned()) {
                             if sel.selection == true {
                                 commands.entity(player.to_owned()).insert(ExternalForce {
-                                    force: Vec3::new(50.0*way.0, 0.0, 50.0*way.1),
+                                    force: Vec3::new(150.0*way.0, 0.0, 150.0*way.1),
                                     torque: Vec3::new(0.0, 0.0, 0.0),
 
                                 });
