@@ -1,8 +1,8 @@
 //! A simple 3D scene with light shining over a cube sitting on a plane.
 
 use bevy::prelude::*;
-use bevy_rapier3d::{prelude::{RapierPhysicsPlugin, NoUserData, Collider, RapierContext, QueryFilter, RigidBody, Velocity, ExternalForce, Damping}, render::RapierDebugRenderPlugin};
-use voidgrinder::{camera::{pan_orbit_camera, spawn_camera}, control::{types::{HoveredEntity, SelectedEntity, Selected}, hover::hovered_entity_tracker, select::selected_entity_tracker}, ui::{stats::stats_setup, button::{setup_button, button_system}}};
+use bevy_rapier3d::{prelude::{RapierPhysicsPlugin, NoUserData, Collider, RapierContext, QueryFilter, RigidBody, Velocity, ExternalForce, Damping}, render::{RapierDebugRenderPlugin, ColliderDebugColor}, rapier::prelude::InteractionGroups};
+use voidgrinder::camera::{pan_orbit_camera, spawn_camera};
 
 fn main() {
     App::new()
@@ -12,8 +12,6 @@ fn main() {
         .add_startup_system(setup_light)
         .add_startup_system(setup_physics)
         .add_startup_system(spawn_camera)
-        .add_startup_system(stats_setup)
-        .add_startup_system(setup_button)
         .init_resource::<Game>()
         .insert_resource(CameraTrackerTimer(Timer::from_seconds(
             1.0,
@@ -28,10 +26,10 @@ fn main() {
         .add_system(clean_forces)
         .add_system(pan_orbit_camera)
         .add_system(cast_ray)
+        .add_system(camera_tracker_debug)
         .add_system(hovered_entity_tracker)
         .add_system(selected_entity_tracker)
         .add_system(move_selected)
-        .add_system(button_system)
         .run();
 }
 
@@ -41,6 +39,14 @@ struct MoveCDTimer(Timer);
 #[derive(Resource)]
 struct CameraTrackerTimer(Timer);
 
+#[derive(Resource,Debug)]
+struct HoveredEntity{ value: Option<Entity>, last: Option<Entity>}
+
+#[derive(Resource,Debug)]
+struct SelectedEntity{ value: Option<Entity>, last: Option<Entity>}
+
+#[derive(Component,Debug)]
+struct Selected{selection : bool}
 
 #[derive(Resource, Default)]
 pub struct Game {
@@ -48,6 +54,157 @@ pub struct Game {
     ground: Option<Entity>,
     score: i32,
     cake_eaten: u32,
+}
+
+fn camera_tracker_debug(
+    time: Res<Time>,
+    mut timer: ResMut<CameraTrackerTimer>,
+    windows: Res<Windows>,
+    cameras: Query<(&Camera, &GlobalTransform)>,
+    hovered: ResMut<HoveredEntity>,
+    selected: ResMut<SelectedEntity>,
+    ){
+    // make sure we wait enough time before spawning the next cake
+    if !timer.0.tick(time.delta()).finished() {
+        return;
+    }
+    for (camera, camera_transform) in cameras.iter() {
+        let (ray_pos, ray_dir) =
+                ray_from_mouse_position(windows.get_primary().unwrap(), camera, camera_transform);
+    //    info!("Camera:{:?}",ray_pos);
+    //    info!("Selection status: {:?}",selected);
+    //    info!("Hovering status: {:?}",hovered);
+    }
+
+}
+
+fn selected_entity_tracker(
+    mut commands: Commands,
+    hovered: ResMut<HoveredEntity>,
+    mut selected: ResMut<SelectedEntity>,
+    mouse_button_input: ResMut<'_, Input<MouseButton>>,
+    mut query: Query<&Selected>,
+    ){
+    if mouse_button_input.pressed(MouseButton::Left){
+        selected.last = selected.value;
+        selected.value = hovered.value;
+        match selected.value {
+            Some(ent) => {
+                let color = Color::GREEN;
+                commands.entity(ent).insert(Selected{selection: true});
+                commands.entity(ent).insert(ColliderDebugColor(color));
+                match selected.last {
+                    Some(ent_last) => {
+                    if ent != ent_last{
+                        let color = Color::RED;
+                        commands.entity(ent_last).insert(Selected{selection: false});
+                        commands.entity(ent_last).insert(ColliderDebugColor(color));
+                    }
+                    },
+                    None => {
+                        return;
+                    }
+                }
+            },
+            None => {
+                match selected.last {
+                    Some(ent_last) => {
+                        let color = Color::RED;
+                        commands.entity(ent_last).insert(Selected{selection: false});
+                        commands.entity(ent_last).insert(ColliderDebugColor(color));
+                    },
+                    None => {
+                        return;
+                    }
+                }
+            }
+            
+        }
+    }
+}
+fn hovered_entity_tracker(
+    mut commands: Commands,
+    mut hovered: ResMut<HoveredEntity>,
+    selected: ResMut<SelectedEntity>,
+    ){
+    match selected.value {
+        Some(sel_ent) => {
+            match hovered.value {
+                Some(ent) => {
+                    if sel_ent != ent {
+                    let color = Color::BLUE;
+                    commands.entity(ent).insert(ColliderDebugColor(color));
+                    };
+                    match hovered.last {
+                        Some(ent_last) => {
+                            if sel_ent != ent_last{
+                                if ent != ent_last{
+                                    let color = Color::RED;
+                                    commands.entity(ent_last).insert(ColliderDebugColor(color));
+                                    hovered.last = Some(ent);
+                                }
+                            }
+                        },
+                        None => {
+                            hovered.last = Some(ent);
+                            return;
+                        }
+
+                    }
+                },
+                None => {
+                    match hovered.last{
+                        Some(ent_last) => {
+                            if ent_last != sel_ent {
+                                let color = Color::RED;
+                                commands.entity(ent_last).insert(ColliderDebugColor(color));
+                            }
+                            hovered.last = None;
+                        },
+                        None => {
+                            return;
+                        }
+                    }
+                }
+            }
+           
+        },
+        None => {
+            match hovered.value {
+                Some(ent) => {
+                    let color = Color::BLUE;
+                    commands.entity(ent).insert(ColliderDebugColor(color));
+                    match hovered.last {
+                        Some(ent_last) => {
+                            if ent != ent_last{
+                            let color = Color::RED;
+                            commands.entity(ent_last).insert(ColliderDebugColor(color));
+                            hovered.last = Some(ent);
+                            }
+                        },
+                        None => {
+                            hovered.last = Some(ent);
+                            return;
+                        }
+
+                    }
+                },
+                None => {
+                    match hovered.last{
+                        Some(ent_last) => {
+                            let color = Color::RED;
+                            commands.entity(ent_last).insert(ColliderDebugColor(color));
+                            hovered.last = None;
+                        },
+                        None => {
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }
 
 /// set up a simple 3D scene
@@ -65,16 +222,6 @@ fn setup_light(
             ..default()
         },
         transform: Transform::from_xyz(4.0, 8.0, 4.0),
-        ..default()
-    });
-
-    commands.spawn(PointLightBundle {
-        point_light: PointLight {
-            intensity: 5000.0,
-            shadows_enabled: true,
-            ..default()
-        },
-        transform: Transform::from_xyz(20.0, 15.0, 4.0),
         ..default()
     });
 }
@@ -331,7 +478,7 @@ fn move_selected(
                     moved = true;
                 }
         if moved {
-        
+        {
             for splayer in &game_state.players{
                 match splayer {
                     None => {},
@@ -349,7 +496,13 @@ fn move_selected(
                     
                 }
             }
-        
+        }
+        /*       for (mut f_e,sel) in query.iter_mut() {
+                  if sel.selection {
+                   info!("{:?} Force: {:?}",way,f_e);
+                    f_e.force = Vec3::new(50.0*way.0, 0.0, 50.0*way.1);
+                  } 
+                } */
         }
 
 

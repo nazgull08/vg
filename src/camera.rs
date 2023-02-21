@@ -112,7 +112,6 @@ pub fn pan_orbit_camera(
 }
 
 
-/// Spawn a camera like this
 pub fn spawn_camera(mut commands: Commands) {
     let translation = Vec3::new(-60.0, 22.0, 14.0);
     let radius = translation.length();
@@ -129,24 +128,3 @@ pub fn spawn_camera(mut commands: Commands) {
         },
     ));
 }
-
-pub fn spawn_scene(
-    mut commands: Commands,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<StandardMaterial>>,
-) {
-    // spawn a cube and a light
-    commands.spawn(PbrBundle {
-        mesh: meshes.add(Mesh::from(shape::Cube { size: 1.0 })),
-        material: materials.add(Color::rgb(0.8, 0.7, 0.6).into()),
-        transform: Transform::from_translation(Vec3::new(0.0, 0.5, 0.0)),
-        ..Default::default()
-    });
-    commands.spawn(PointLightBundle {
-        transform: Transform::from_translation(Vec3::new(4.0, 8.0, 4.0)),
-        ..Default::default()
-    });
-
-    spawn_camera(commands);
-}
-
