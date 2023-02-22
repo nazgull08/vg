@@ -1,10 +1,12 @@
-use bevy::{prelude::{Commands, AssetServer, Res, TextBundle, Color}, text::TextStyle, ui::Style, utils::default};
 use bevy::ui::*;
+use bevy::{
+    prelude::{AssetServer, Color, Commands, Res, TextBundle},
+    text::TextStyle,
+    ui::Style,
+    utils::default,
+};
 
-
-
-pub fn stats_setup(mut commands: Commands,
-    asset_server: Res<AssetServer>) {
+pub fn stats_setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn(
         TextBundle::from_section(
             "Score:",

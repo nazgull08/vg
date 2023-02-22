@@ -1,5 +1,11 @@
-use bevy::{ecs::schedule::SystemSet, prelude::*, input::mouse::{MouseButtonInput, MouseMotion, MouseWheel}};
+use bevy::{
+    ecs::schedule::SystemSet,
+    input::mouse::{MouseButtonInput, MouseMotion, MouseWheel},
+    prelude::*,
+};
+use bevy_rapier3d::prelude::{QueryFilter, RapierContext};
 
+use crate::control::types::HoveredEntity;
 
 /// Tags an entity as capable of panning and orbiting.
 #[derive(Component)]
@@ -74,7 +80,11 @@ pub fn pan_orbit_camera(
             let window = get_primary_window_size(&windows);
             let delta_x = {
                 let delta = rotation_move.x / window.x * std::f32::consts::PI * 2.0;
-                if pan_orbit.upside_down { -delta } else { delta }
+                if pan_orbit.upside_down {
+                    -delta
+                } else {
+                    delta
+                }
             };
             let delta_y = rotation_move.y / window.y * std::f32::consts::PI;
             let yaw = Quat::from_rotation_y(-delta_x);
@@ -106,11 +116,11 @@ pub fn pan_orbit_camera(
             // parent = x and y rotation
             // child = z-offset
             let rot_matrix = Mat3::from_quat(transform.rotation);
-            transform.translation = pan_orbit.focus + rot_matrix.mul_vec3(Vec3::new(0.0, 0.0, pan_orbit.radius));
+            transform.translation =
+                pan_orbit.focus + rot_matrix.mul_vec3(Vec3::new(0.0, 0.0, pan_orbit.radius));
         }
     }
 }
-
 
 pub fn spawn_camera(mut commands: Commands) {
     let translation = Vec3::new(-60.0, 22.0, 14.0);
@@ -118,8 +128,7 @@ pub fn spawn_camera(mut commands: Commands) {
 
     commands.spawn((
         Camera3dBundle {
-            transform: Transform::from_translation(translation)
-                .looking_at(Vec3::ZERO, Vec3::Y),
+            transform: Transform::from_translation(translation).looking_at(Vec3::ZERO, Vec3::Y),
             ..Default::default()
         },
         PanOrbitCamera {
@@ -127,4 +136,60 @@ pub fn spawn_camera(mut commands: Commands) {
             ..Default::default()
         },
     ));
+}
+
+pub fn cast_ray(
+    mut commands: Commands,
+    windows: Res<Windows>,
+    rapier_context: Res<RapierContext>,
+    cameras: Query<(&Camera, &GlobalTransform)>,
+    mut hovered: ResMut<HoveredEntity>,
+) {
+    // We will color in read the colliders hovered by the mouse.
+    for (camera, camera_transform) in cameras.iter() {
+        // First, compute a ray from the mouse position.
+        let (ray_pos, ray_dir) =
+            ray_from_mouse_position(windows.get_primary().unwrap(), camera, camera_transform);
+
+        // Then cast the ray.
+        let hit = rapier_context.cast_ray(
+            ray_pos,
+            ray_dir,
+            f32::MAX,
+            true,
+            QueryFilter::only_dynamic(),
+        );
+
+        if let Some((entity, _toi)) = hit {
+            // Color in blue the entity we just hit.
+            // Because of the query filter, only colliders attached to a dynamic body
+            hovered.value = Some(entity);
+            return;
+        } else {
+            hovered.value = None;
+            return;
+        }
+    }
+}
+
+// Credit to @doomy on discord.
+pub fn ray_from_mouse_position(
+    window: &Window,
+    camera: &Camera,
+    camera_transform: &GlobalTransform,
+) -> (Vec3, Vec3) {
+    let mouse_position = window.cursor_position().unwrap_or(Vec2::new(0.0, 0.0));
+
+    let x = 2.0 * (mouse_position.x / window.width() as f32) - 1.0;
+    let y = 2.0 * (mouse_position.y / window.height() as f32) - 1.0;
+
+    let camera_inverse_matrix =
+        camera_transform.compute_matrix() * camera.projection_matrix().inverse();
+    let near = camera_inverse_matrix * Vec3::new(x, y, -1.0).extend(1.0);
+    let far = camera_inverse_matrix * Vec3::new(x, y, 1.0).extend(1.0);
+
+    let near = near.truncate() / near.w;
+    let far = far.truncate() / far.w;
+    let dir: Vec3 = far - near;
+    (near, dir)
 }

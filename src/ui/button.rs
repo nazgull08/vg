@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{units::ball::spawn_ball, world::Game, events::SpawnBall};
+use crate::{events::SpawnBall, units::ball::spawn_ball, world::Game};
 
 const NORMAL_BUTTON: Color = Color::rgb(0.15, 0.15, 0.15);
 const HOVERED_BUTTON: Color = Color::rgb(0.25, 0.25, 0.25);
