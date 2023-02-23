@@ -6,7 +6,7 @@ use bevy_rapier3d::prelude::{
 use crate::{control::types::Selected, world::Game};
 
 #[derive(Resource)]
-pub struct MoveCDTimer(Timer);
+pub struct MoveCDTimer(pub Timer);
 
 pub fn clean_forces(
     time: Res<Time>,
@@ -91,7 +91,7 @@ pub fn setup_physics(
 
     // load a texture and retrieve its aspect ratio
     let texture_handle = asset_server.load("res/img/cat.png");
-    let aspect = 0.25;
+    let _aspect = 0.25;
 
     // this material renders the texture normally
     let material_handle = materials.add(StandardMaterial {

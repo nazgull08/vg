@@ -8,15 +8,15 @@ use super::types::{Selected, SelectedEntity};
 pub fn move_selected(
     mut commands: Commands,
     keyboard_input: Res<Input<KeyCode>>,
-    mut selected: ResMut<SelectedEntity>,
-    mut transforms: Query<&mut Transform>,
-    time: Res<Time>,
-    mut timer: ResMut<MoveCDTimer>,
-    mut game_state: ResMut<Game>,
+    selected: ResMut<SelectedEntity>,
+    _transforms: Query<&mut Transform>,
+    _time: Res<Time>,
+    _timer: ResMut<MoveCDTimer>,
+    game_state: ResMut<Game>,
     query: Query<&Selected>,
 ) {
     match selected.value {
-        Some(ent) => {
+        Some(_ent) => {
             let mut moved = false;
             let mut way = Vec3::new(0.0, 0.0, 0.0);
             if keyboard_input.pressed(KeyCode::Up) {
@@ -35,7 +35,7 @@ pub fn move_selected(
                 way = Vec3::new(0.0, 0.0, -1.0);
                 moved = true;
             }
-            if keyboard_input.pressed(KeyCode::Space) {
+            if keyboard_input.pressed(KeyCode::LControl) {
                 way = Vec3::new(0.0, 1.0, 0.0);
                 moved = true;
             }
@@ -51,7 +51,7 @@ pub fn move_selected(
                             if let Ok(sel) = query.get(player.to_owned()) {
                                 if sel.selection == true {
                                     commands.entity(player.to_owned()).insert(ExternalForce {
-                                        force: (way * 50.0),
+                                        force: (way * 150.0),
                                         torque: (way * 0.0),
                                     });
                                 }

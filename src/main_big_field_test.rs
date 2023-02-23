@@ -1,10 +1,13 @@
+
+
 //! Eat the cakes. Eat them all. An example 3D game.
 
 use std::f32::consts::PI;
 
-use bevy::{ecs::schedule::SystemSet, prelude::*, input::mouse::{MouseButtonInput, MouseMotion, MouseWheel}, diagnostic::{LogDiagnosticsPlugin, FrameTimeDiagnosticsPlugin}};
+use bevy::{ecs::schedule::SystemSet, prelude::*};
+use bevy::diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin};
 use rand::Rng;
-use voidgrinder::camera::*;
+use voidgrinder::camera::{pan_orbit_camera, spawn_camera};
 
 #[derive(Clone, Eq, PartialEq, Debug, Hash)]
 enum GameState {
@@ -26,8 +29,7 @@ fn main() {
         .add_plugin(LogDiagnosticsPlugin::default())
         .add_plugin(FrameTimeDiagnosticsPlugin::default())
         .add_state(GameState::Playing)
-        .add_startup_system(spawn_scene)
-        .add_system(pan_orbit_camera)
+        .add_startup_system(spawn_camera)
         .add_system_set(SystemSet::on_enter(GameState::Playing).with_system(setup))
         .add_system_set(
             SystemSet::on_update(GameState::Playing)
@@ -41,9 +43,8 @@ fn main() {
         .add_system_set(SystemSet::on_update(GameState::GameOver).with_system(gameover_keyboard))
         .add_system_set(SystemSet::on_exit(GameState::GameOver).with_system(teardown))
         .add_system(bevy::window::close_on_esc)
+        .add_system(pan_orbit_camera)
         .run();
-    let _ = App::new()
-        .add_startup_system(spawn_camera);
 }
 
 struct Cell {
@@ -77,8 +78,8 @@ struct Game {
     camera_is_focus: Vec3,
 }
 
-const BOARD_SIZE_I: usize = 10;
-const BOARD_SIZE_J: usize = 10;
+const BOARD_SIZE_I: usize = 50;
+const BOARD_SIZE_J: usize = 50;
 
 const RESET_FOCUS: [f32; 3] = [
     BOARD_SIZE_I as f32 / 2.0,
@@ -106,7 +107,7 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>, mut game: ResMu
     game.score = 0;
     game.player.i = BOARD_SIZE_I / 2;
     game.player.j = BOARD_SIZE_J / 2;
-    game.player.move_cooldown = Timer::from_seconds(0.1, TimerMode::Once);
+    game.player.move_cooldown = Timer::from_seconds(0.3, TimerMode::Once);
 
     commands.spawn(PointLightBundle {
         transform: Transform::from_xyz(4.0, 10.0, 4.0),
@@ -314,7 +315,7 @@ fn spawn_bonus(
         game.score -= 3;
         commands.entity(entity).despawn_recursive();
         game.bonus.entity = None;
-        if game.score <= -1000 {
+        if game.score <= -5000 {
             // We don't particularly care if this operation fails
             let _ = state.overwrite_set(GameState::GameOver);
             return;
@@ -334,7 +335,7 @@ fn spawn_bonus(
             .spawn(SceneBundle {
                 transform: Transform::from_xyz(
                     game.bonus.i as f32,
-                    game.board[game.bonus.j][game.bonus.i].height + 0.5,
+                    game.board[game.bonus.j][game.bonus.i].height + 0.2,
                     game.bonus.j as f32,
                 ),
                 scene: game.bonus.handle.clone(),
@@ -403,3 +404,5 @@ fn display_score(mut commands: Commands, asset_server: Res<AssetServer>, game: R
             ));
         });
 }
+
+

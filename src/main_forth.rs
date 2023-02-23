@@ -348,7 +348,7 @@ fn move_selected(
                         if let Ok(sel) = query.get(player.to_owned()) {
                             if sel.selection == true {
                                 commands.entity(player.to_owned()).insert(ExternalForce {
-                                    force: (way*50.0), 
+                                    force: (way*100.0), 
                                     torque: (way*0.0),
 
                                 });

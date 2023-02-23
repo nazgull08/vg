@@ -8,7 +8,7 @@ pub fn selected_entity_tracker(
     hovered: ResMut<HoveredEntity>,
     mut selected: ResMut<SelectedEntity>,
     mouse_button_input: ResMut<'_, Input<MouseButton>>,
-    mut query: Query<&Selected>,
+    _query: Query<&Selected>,
 ) {
     if mouse_button_input.pressed(MouseButton::Left) {
         selected.last = selected.value;

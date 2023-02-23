@@ -11,15 +11,15 @@ pub fn spawn_ball(
     mut game_state: ResMut<Game>,
     mut ev_spawn_ball: EventReader<SpawnBall>,
 ) {
-    for ev_sp_ball in ev_spawn_ball.iter() {
+    for _ev_sp_ball in ev_spawn_ball.iter() {
         let dad = 1.0;
         let dld = 1.0;
 
         let rad = 0.8;
 
         // load a texture and retrieve its aspect ratio
-        //let texture_handle = asset_server.load("res/img/cat.png");
-        let aspect = 0.25;
+        let texture_handle = asset_server.load("res/img/cat.png");
+        let _aspect = 0.25;
 
         // this material renders the texture normally
         let material_handle = materials.add(StandardMaterial {
@@ -32,6 +32,11 @@ pub fn spawn_ball(
             alpha_mode: AlphaMode::Blend,
             ..default()
         });
+        
+        let material_handle2 = materials.add(StandardMaterial {
+            base_color_texture: Some(texture_handle.clone()),
+            ..default()
+        });
 
         game_state.players.push(Some(
             commands
@@ -40,11 +45,11 @@ pub fn spawn_ball(
                         radius: rad,
                         subdivisions: 8,
                     })),
-                    material: material_handle,
+                    material: material_handle2,
                     ..default()
                 })
                 .insert(Collider::ball(rad))
-                .insert(TransformBundle::from(Transform::from_xyz(-5.0, 10.0, 3.0)))
+                .insert(TransformBundle::from(Transform::from_xyz(10.0, 30.0, 5.0)))
                 .insert(RigidBody::Dynamic)
                 .insert(ExternalForce {
                     force: Vec3::new(0.0, 0.0, 0.0),
@@ -59,15 +64,6 @@ pub fn spawn_ball(
                     angular_damping: dad,
                 })
                 .insert(Selected { selection: false })
-                .insert(PointLightBundle {
-                    point_light: PointLight {
-                        color: Color::PURPLE,
-                        intensity: 10000.0,
-                        shadows_enabled: true,
-                        ..default()
-                    },
-                    ..default()
-                })
                 .id(),
         ));
     }
