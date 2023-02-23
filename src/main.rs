@@ -13,7 +13,7 @@ use voidgrinder::{
     events::*,
     ui::{
         button::{button_system, setup_button},
-        stats::stats_setup,
+        stats::stats_setup, main_menu::setup_main_menu,
     },
     world::{Game, ship::ship_startup}, units::ball::spawn_ball, physics::{MoveCDTimer, clean_forces}, cam::{focus::{spawn_focus_camera, focus_camera}, orbit::pan_orbit_camera, ray::{cast_ray, cast_ray_center}},
 };
@@ -33,6 +33,7 @@ fn main() {
        // .add_startup_system(spawn_focus_camera)
         .add_startup_system(stats_setup)
         .add_startup_system(setup_button)
+        .add_startup_system(setup_main_menu)
         .add_startup_system(ship_startup)
         .insert_resource(MovementSettings {
             sensitivity: 0.00010, // default: 0.00012
