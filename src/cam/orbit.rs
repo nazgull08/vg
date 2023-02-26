@@ -3,7 +3,6 @@ use bevy::{
     prelude::*,
 };
 
-
 /// Tags an entity as capable of panning and orbiting.
 #[derive(Component)]
 pub struct PanOrbitCamera {
@@ -118,7 +117,7 @@ pub fn pan_orbit_camera(
         }
     }
 }
- 
+
 pub fn spawn_orbit_camera(mut commands: Commands) {
     let translation = Vec3::new(-60.0, 22.0, 14.0);
     let radius = translation.length();
@@ -134,4 +133,3 @@ pub fn spawn_orbit_camera(mut commands: Commands) {
         },
     ));
 }
-

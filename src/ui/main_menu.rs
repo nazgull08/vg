@@ -1,15 +1,16 @@
-use bevy::{ui::{PositionType, UiRect}, prelude::*};
+use bevy::{
+    prelude::*,
+    ui::{PositionType, UiRect},
+};
 
-const NORMAL_BUTTON: Color = Color::rgb(0.15, 0.15, 0.15);
-const HOVERED_BUTTON: Color = Color::rgb(0.25, 0.25, 0.25);
-const PRESSED_BUTTON: Color = Color::rgb(0.35, 0.75, 0.35);
+use super::buttons::rules::{NORMAL_BUTTON, STD_SIZE};
 
 pub fn setup_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
     // ui camera
     commands
         .spawn(ButtonBundle {
             style: Style {
-                size: Size::new(Val::Px(150.0), Val::Px(65.0)),
+                size: Size::new(STD_SIZE.0,STD_SIZE.1),
                 // horizontally center child text
                 justify_content: JustifyContent::Center,
                 // vertically center child text

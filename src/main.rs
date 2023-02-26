@@ -1,23 +1,32 @@
+use bevy::diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin};
 use bevy::prelude::*;
+use bevy_flycam::{MovementSettings, PlayerPlugin};
 use bevy_rapier3d::{
     prelude::{NoUserData, RapierPhysicsPlugin},
     render::RapierDebugRenderPlugin,
 };
-use bevy_flycam::{PlayerPlugin, MovementSettings};
 use voidgrinder::{
+    cam::{
+        focus::{focus_camera, spawn_focus_camera},
+        orbit::{pan_orbit_camera, spawn_orbit_camera},
+        ray::{cast_ray, cast_ray_center},
+    },
     control::{
         hover::hovered_entity_tracker,
+        movement::move_selected,
         select::selected_entity_tracker,
-        types::{HoveredEntity, SelectedEntity}, movement::move_selected,
+        types::{HoveredEntity, SelectedEntity},
     },
     events::*,
+    physics::{clean_forces, MoveCDTimer},
     ui::{
-        button::{button_system, setup_button},
-        stats::stats_setup, main_menu::setup_main_menu, main_menu_test::setup_menu_test_system,
+        buttons::{button_system, setup_button},
+        main_menu::setup_main_menu,
+        stats::stats_setup,
     },
-    world::{Game, ship::ship_startup}, units::{ball::spawn_ball, eyelegger::spawn_eye_legger}, physics::{MoveCDTimer, clean_forces}, cam::{focus::{spawn_focus_camera, focus_camera}, orbit::{pan_orbit_camera, spawn_orbit_camera}, ray::{cast_ray, cast_ray_center}},
+    units::{ball::spawn_ball, eyelegger::spawn_eye_legger},
+    world::{ship::ship_startup, Game},
 };
-use bevy::diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin};
 
 fn main() {
     App::new()
@@ -28,15 +37,10 @@ fn main() {
         .add_plugin(RapierDebugRenderPlugin::default())
         .add_startup_system(setup_light)
         .add_startup_system(spawn_orbit_camera)
-        .add_startup_system(stats_setup)
-        .add_startup_system(setup_button)
         .add_startup_system(setup_main_menu)
         .add_startup_system(ship_startup)
         .init_resource::<Game>()
-        .insert_resource(MoveCDTimer(Timer::from_seconds(
-            1.0,
-            TimerMode::Repeating,
-        )))
+        .insert_resource(MoveCDTimer(Timer::from_seconds(1.0, TimerMode::Repeating)))
         .insert_resource(HoveredEntity {
             value: None,
             last: None,
@@ -70,56 +74,6 @@ fn setup_light(mut commands: Commands) {
             ..default()
         },
         transform: Transform::from_xyz(20.0, 5.0, 20.0),
-        ..default()
-    });
-
-    commands.spawn(PointLightBundle {
-        point_light: PointLight {
-            intensity: 10000.0,
-            shadows_enabled: true,
-            ..default()
-        },
-        transform: Transform::from_xyz(10.0, 5.0, 10.0),
-        ..default()
-    });
-
-    commands.spawn(PointLightBundle {
-        point_light: PointLight {
-            intensity: 10000.0,
-            shadows_enabled: true,
-            ..default()
-        },
-        transform: Transform::from_xyz(30.0, 5.0, 35.0),
-        ..default()
-    });
-
-    commands.spawn(PointLightBundle {
-        point_light: PointLight {
-            intensity: 10000.0,
-            shadows_enabled: true,
-            ..default()
-        },
-        transform: Transform::from_xyz(50.0, 5.0, 35.0),
-        ..default()
-    });
-
-    commands.spawn(PointLightBundle {
-        point_light: PointLight {
-            intensity: 30000.0,
-            shadows_enabled: true,
-            ..default()
-        },
-        transform: Transform::from_xyz(5.0, 10.0, 10.0),
-        ..default()
-    });
-
-    commands.spawn(PointLightBundle {
-        point_light: PointLight {
-            intensity: 30000.0,
-            shadows_enabled: true,
-            ..default()
-        },
-        transform: Transform::from_xyz(5.0, 10.0, 45.0),
         ..default()
     });
 }

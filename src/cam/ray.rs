@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use bevy_rapier3d::prelude::{RapierContext, QueryFilter};
+use bevy_rapier3d::prelude::{QueryFilter, RapierContext};
 
 use crate::control::types::HoveredEntity;
 
@@ -16,13 +16,7 @@ pub fn cast_ray(
             ray_from_mouse_position(windows.get_primary().unwrap(), camera, camera_transform);
 
         // Then cast the ray.
-        let hit = rapier_context.cast_ray(
-            ray_pos,
-            ray_dir,
-            f32::MAX,
-            true,
-            QueryFilter::new()
-        );
+        let hit = rapier_context.cast_ray(ray_pos, ray_dir, f32::MAX, true, QueryFilter::new());
 
         if let Some((entity, _toi)) = hit {
             // Color in blue the entity we just hit.
@@ -49,13 +43,7 @@ pub fn cast_ray_center(
             ray_from_center(windows.get_primary().unwrap(), camera, camera_transform);
 
         // Then cast the ray.
-        let hit = rapier_context.cast_ray(
-            ray_pos,
-            ray_dir,
-            f32::MAX,
-            true,
-            QueryFilter::new()
-        );
+        let hit = rapier_context.cast_ray(ray_pos, ray_dir, f32::MAX, true, QueryFilter::new());
 
         if let Some((entity, _toi)) = hit {
             // Color in blue the entity we just hit.
@@ -68,7 +56,6 @@ pub fn cast_ray_center(
         }
     }
 }
-
 
 // Credit to @doomy on discord.
 pub fn ray_from_mouse_position(
@@ -100,7 +87,7 @@ pub fn ray_from_center(
 ) -> (Vec3, Vec3) {
     let mouse_position = window.cursor_position().unwrap_or(Vec2::new(0.0, 0.0));
 
-    let x = 0.0; 
+    let x = 0.0;
     let y = 0.0;
 
     let camera_inverse_matrix =
@@ -113,4 +100,3 @@ pub fn ray_from_center(
     let dir: Vec3 = far - near;
     (near, dir)
 }
-

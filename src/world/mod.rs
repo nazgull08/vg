@@ -32,7 +32,7 @@ pub struct Vec3i32 {
 }
 
 impl Vec3i32 {
-    fn new(x: i32, y: i32, z: i32) -> Vec3i32{
-        Vec3i32 { x, y, z}
+    fn new(x: i32, y: i32, z: i32) -> Vec3i32 {
+        Vec3i32 { x, y, z }
     }
 }

@@ -2,12 +2,7 @@ use bevy::prelude::*;
 
 use crate::world::Game;
 
-const RESET_FOCUS: [f32; 3] = [
-    15.0,
-    0.0,
-    30. / 2.0 - 0.5,
-];
-
+const RESET_FOCUS: [f32; 3] = [15.0, 0.0, 30. / 2.0 - 0.5];
 
 pub fn spawn_focus_camera(mut commands: Commands, mut game: ResMut<Game>) {
     game.camera_should_focus = Vec3::from(RESET_FOCUS);
@@ -30,19 +25,18 @@ pub fn focus_camera(
     mut transforms: ParamSet<(Query<&mut Transform, With<Camera3d>>, Query<&Transform>)>,
 ) {
     const SPEED: f32 = 2.0;
-    if game.players.len()>0{
-    // if there is both a player and a bonus, target the mid-point of them
-    if let Some(player_entity) = game.players[0] {
-        if let Ok(player_transform) = transforms.p1().get(player_entity) {
-            game.camera_should_focus = player_transform.translation;
+    if game.players.len() > 0 {
+        // if there is both a player and a bonus, target the mid-point of them
+        if let Some(player_entity) = game.players[0] {
+            if let Ok(player_transform) = transforms.p1().get(player_entity) {
+                game.camera_should_focus = player_transform.translation;
+            }
+            // otherwise, target the middle
+        } else {
+            game.camera_should_focus = Vec3::from(RESET_FOCUS);
         }
-        // otherwise, target the middle
     } else {
         game.camera_should_focus = Vec3::from(RESET_FOCUS);
-    }
-    } else {
-        game.camera_should_focus = Vec3::from(RESET_FOCUS);
-
     }
     // calculate the camera motion based on the difference between where the camera is looking
     // and where it should be looking; the greater the distance, the faster the motion;

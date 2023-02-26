@@ -32,7 +32,7 @@ pub fn spawn_ball(
             alpha_mode: AlphaMode::Blend,
             ..default()
         });
-        
+
         let material_handle2 = materials.add(StandardMaterial {
             base_color_texture: Some(texture_handle.clone()),
             ..default()

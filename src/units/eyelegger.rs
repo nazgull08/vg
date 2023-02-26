@@ -1,9 +1,15 @@
 use std::f32::consts::PI;
 
 use bevy::prelude::*;
-use bevy_rapier3d::prelude::{Collider, Damping, ExternalForce, RigidBody, Velocity, AdditionalMassProperties};
+use bevy_rapier3d::prelude::{
+    AdditionalMassProperties, Collider, Damping, ExternalForce, RigidBody, Velocity,
+};
 
-use crate::{control::types::Selected, events::{SpawnBall, SpawnEyeLegger}, world::Game};
+use crate::{
+    control::types::Selected,
+    events::{SpawnBall, SpawnEyeLegger},
+    world::Game,
+};
 
 pub fn spawn_eye_legger(
     mut commands: Commands,
@@ -26,21 +32,20 @@ pub fn spawn_eye_legger(
         //info!("model: {:?} ", model_handle);
 
         // this material renders the texture normally
-        
+
         game_state.players.push(Some(
             commands
                 .spawn(SceneBundle {
                     transform: Transform {
-                        translation: Vec3::new(0.0,20.0,0.0
-                        ),
+                        translation: Vec3::new(0.0, 20.0, 0.0),
                         ..default()
                     },
                     scene: asset_server.load("models/eyelegger.glb#Scene0"),
                     ..default()
                 })
-                .insert(Collider::cuboid(rad*4.0,rad*4.0,rad*4.0))
+                .insert(Collider::cuboid(rad * 4.0, rad * 4.0, rad * 4.0))
                 .insert(TransformBundle::from(Transform::from_xyz(10.0, 30.0, 5.0)))
-                .insert(RigidBody::Dynamic )
+                .insert(RigidBody::Dynamic)
                 .insert(ExternalForce {
                     force: Vec3::new(0.0, 0.0, 0.0),
                     torque: Vec3::new(0.0, 0.0, 0.0),

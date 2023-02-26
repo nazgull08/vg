@@ -1,10 +1,10 @@
+pub mod rules;
+
 use bevy::prelude::*;
 
 use crate::events::{SpawnBall, SpawnEyeLegger};
 
-const NORMAL_BUTTON: Color = Color::rgb(0.15, 0.15, 0.15);
-const HOVERED_BUTTON: Color = Color::rgb(0.25, 0.25, 0.25);
-const PRESSED_BUTTON: Color = Color::rgb(0.35, 0.75, 0.35);
+use self::rules::{HOVERED_BUTTON, NORMAL_BUTTON, PRESSED_BUTTON};
 
 pub fn setup_button(mut commands: Commands, asset_server: Res<AssetServer>) {
     // ui camera
