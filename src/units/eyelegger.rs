@@ -1,20 +1,12 @@
-use std::f32::consts::PI;
-
 use bevy::prelude::*;
-use bevy_rapier3d::prelude::{
-    AdditionalMassProperties, Collider, Damping, ExternalForce, RigidBody, Velocity,
-};
+use bevy_rapier3d::prelude::{Collider, Damping, ExternalForce, RigidBody, Velocity};
 
-use crate::{
-    control::types::Selected,
-    events::{SpawnBall, SpawnEyeLegger},
-    world::Game,
-};
+use crate::{control::types::Selected, events::SpawnEyeLegger, world::Game};
 
 pub fn spawn_eye_legger(
     mut commands: Commands,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<StandardMaterial>>,
+    _meshes: ResMut<Assets<Mesh>>,
+    _materials: ResMut<Assets<StandardMaterial>>,
     asset_server: Res<AssetServer>,
     mut game_state: ResMut<Game>,
     mut ev_spawn_eye_legger: EventReader<SpawnEyeLegger>,

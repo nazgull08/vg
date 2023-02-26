@@ -85,7 +85,7 @@ pub fn ray_from_center(
     camera: &Camera,
     camera_transform: &GlobalTransform,
 ) -> (Vec3, Vec3) {
-    let mouse_position = window.cursor_position().unwrap_or(Vec2::new(0.0, 0.0));
+    let _mouse_position = window.cursor_position().unwrap_or(Vec2::new(0.0, 0.0));
 
     let x = 0.0;
     let y = 0.0;

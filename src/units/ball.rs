@@ -22,7 +22,7 @@ pub fn spawn_ball(
         let _aspect = 0.25;
 
         // this material renders the texture normally
-        let material_handle = materials.add(StandardMaterial {
+        let _material_handle = materials.add(StandardMaterial {
             base_color: Color::Rgba {
                 red: 0.5,
                 green: 0.5,

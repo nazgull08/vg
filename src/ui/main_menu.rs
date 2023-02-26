@@ -1,7 +1,4 @@
-use bevy::{
-    prelude::*,
-    ui::{PositionType, UiRect},
-};
+use bevy::{prelude::*, ui::PositionType};
 
 use super::buttons::rules::{NORMAL_BUTTON, STD_SIZE};
 
@@ -10,7 +7,7 @@ pub fn setup_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands
         .spawn(ButtonBundle {
             style: Style {
-                size: Size::new(STD_SIZE.0,STD_SIZE.1),
+                size: Size::new(STD_SIZE.0, STD_SIZE.1),
                 // horizontally center child text
                 justify_content: JustifyContent::Center,
                 // vertically center child text

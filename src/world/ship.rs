@@ -37,8 +37,8 @@ pub fn ship_startup(
     let gmin_y = 0.0 - ground_height;
     let gmax_y = 0.0 + ground_height;
 
-    let dld = 10.0;
-    let dad = 10.0;
+    let _dld = 10.0;
+    let _dad = 10.0;
 
     game.ground = Some(
         commands
@@ -61,7 +61,7 @@ pub fn ship_startup(
             ))
             .insert(TransformBundle::from(Transform::from_xyz(
                 0.0,
-                -ground_height-2.0,
+                -ground_height - 2.0,
                 2.0,
             )))
             .id(),

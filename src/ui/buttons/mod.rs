@@ -2,7 +2,7 @@ pub mod rules;
 
 use bevy::prelude::*;
 
-use crate::events::{SpawnBall, SpawnEyeLegger};
+use crate::events::SpawnEyeLegger;
 
 use self::rules::{HOVERED_BUTTON, NORMAL_BUTTON, PRESSED_BUTTON};
 
@@ -77,7 +77,7 @@ pub fn button_system(
         (Changed<Interaction>, With<Button>),
     >,
     mut text_query: Query<&mut Text>,
-    mut ev_spawn_eye_legger: EventWriter<SpawnEyeLegger>,
+    _ev_spawn_eye_legger: EventWriter<SpawnEyeLegger>,
 ) {
     for (interaction, mut color, children) in &mut interaction_query {
         let mut text = text_query.get_mut(children[0]).unwrap();

@@ -1,15 +1,13 @@
-use bevy::diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin};
 use bevy::prelude::*;
-use bevy_flycam::{MovementSettings, PlayerPlugin};
+
 use bevy_rapier3d::{
     prelude::{NoUserData, RapierPhysicsPlugin},
     render::RapierDebugRenderPlugin,
 };
 use voidgrinder::{
     cam::{
-        focus::{focus_camera, spawn_focus_camera},
         orbit::{pan_orbit_camera, spawn_orbit_camera},
-        ray::{cast_ray, cast_ray_center},
+        ray::cast_ray,
     },
     control::{
         hover::hovered_entity_tracker,
@@ -19,12 +17,8 @@ use voidgrinder::{
     },
     events::*,
     physics::{clean_forces, MoveCDTimer},
-    ui::{
-        buttons::{button_system, setup_button},
-        main_menu::setup_main_menu,
-        stats::stats_setup,
-    },
-    units::{ball::spawn_ball, eyelegger::spawn_eye_legger},
+    ui::{buttons::button_system, main_menu::setup_main_menu},
+    units::eyelegger::spawn_eye_legger,
     world::{ship::ship_startup, Game},
 };
 
