@@ -81,7 +81,6 @@ pub fn ray_from_mouse_position(
     let x = 2.0 * (mouse_position.x / window.width() as f32) - 1.0;
     let y = 2.0 * (mouse_position.y / window.height() as f32) - 1.0;
 
-    info!("MOUSE {x},{y}");
     let camera_inverse_matrix =
         camera_transform.compute_matrix() * camera.projection_matrix().inverse();
     let near = camera_inverse_matrix * Vec3::new(x, y, -1.0).extend(1.0);

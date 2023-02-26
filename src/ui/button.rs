@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::events::SpawnBall;
+use crate::events::{SpawnBall, SpawnEyeLegger};
 
 const NORMAL_BUTTON: Color = Color::rgb(0.15, 0.15, 0.15);
 const HOVERED_BUTTON: Color = Color::rgb(0.25, 0.25, 0.25);
@@ -77,7 +77,7 @@ pub fn button_system(
         (Changed<Interaction>, With<Button>),
     >,
     mut text_query: Query<&mut Text>,
-    mut ev_spawn_ball: EventWriter<SpawnBall>,
+    mut ev_spawn_eye_legger: EventWriter<SpawnEyeLegger>,
 ) {
     for (interaction, mut color, children) in &mut interaction_query {
         let mut text = text_query.get_mut(children[0]).unwrap();
@@ -85,7 +85,6 @@ pub fn button_system(
             Interaction::Clicked => {
                 text.sections[0].value = "Press".to_string();
                 *color = PRESSED_BUTTON.into();
-                ev_spawn_ball.send(SpawnBall);
             }
             Interaction::Hovered => {
                 text.sections[0].value = "Hover".to_string();
