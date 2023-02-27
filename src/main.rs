@@ -31,7 +31,7 @@ use voidgrinder::{
         main_menu::{main_menu_setup, main_menu_system},
         menu_control::menu_control_system,
     },
-    units::eyelegger::spawn_eye_legger,
+    units::{eyelegger::spawn_eye_legger, ball::spawn_ball},
     world::{ship::ship_startup, Game, UIFiniteStateMachine},
 };
 
@@ -76,7 +76,7 @@ fn main() {
         .add_system(selected_entity_tracker)
         .add_system(button_system)
         .add_system(main_menu_button_system)
-        .add_system(spawn_eye_legger)
+        .add_system(spawn_ball)
         .add_system(move_selected)
         .run();
 }
