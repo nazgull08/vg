@@ -2,6 +2,7 @@ use bevy::{
     input::mouse::{MouseMotion, MouseWheel},
     prelude::*,
 };
+use bevy_atmosphere::prelude::AtmosphereCamera;
 
 /// Tags an entity as capable of panning and orbiting.
 #[derive(Component)]
@@ -131,5 +132,6 @@ pub fn spawn_orbit_camera(mut commands: Commands) {
             radius,
             ..Default::default()
         },
+        AtmosphereCamera::default(),
     ));
 }

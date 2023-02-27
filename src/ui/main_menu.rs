@@ -1,32 +1,102 @@
 use bevy::{prelude::*, ui::PositionType};
 
-use super::buttons::rules::{NORMAL_BUTTON, STD_SIZE};
+use crate::{
+    events::{CloseMenu, OpenMenu},
+    world::{GameFSM, UIFiniteStateMachine},
+};
 
-pub fn setup_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
-    // ui camera
-    commands
-        .spawn(ButtonBundle {
-            style: Style {
-                size: Size::new(STD_SIZE.0, STD_SIZE.1),
-                // horizontally center child text
-                justify_content: JustifyContent::Center,
-                // vertically center child text
-                align_items: AlignItems::Center,
-                // position
-                position_type: PositionType::Relative,
-                ..default()
-            },
-            background_color: NORMAL_BUTTON.into(),
-            ..default()
-        })
-        .with_children(|parent| {
-            parent.spawn(TextBundle::from_section(
-                "Новая игра",
-                TextStyle {
-                    font: asset_server.load("fonts/FiraSans-Bold.ttf"),
-                    font_size: 40.0,
-                    color: Color::rgb(0.9, 0.9, 0.9),
-                },
-            ));
-        });
+use super::buttons::{
+    rules::{std_bttn, std_txt, MENU_BG, NORMAL_BUTTON, STD_SIZE},
+    types::{ButtonTag, Buttons, MainMenuButtons},
+};
+
+pub fn main_menu_setup(
+    mut commands: Commands,
+    mut ev_spawn_main_menu: EventWriter<OpenMenu>,
+    mut ui_state: ResMut<UIFiniteStateMachine>,
+) {
+    ev_spawn_main_menu.send(OpenMenu);
+}
+
+pub fn main_menu_system(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
+    mut ev_spawn_main_menu: EventReader<OpenMenu>,
+    mut ev_close__main_menu: EventReader<CloseMenu>,
+    mut ui_state: ResMut<UIFiniteStateMachine>,
+) {
+    for _ in ev_spawn_main_menu.iter() {
+        // ui camera
+        //let font:Handle<Font> = asset_server.load("fonts/FiraSans-Bold.ttf");
+        let font: Handle<Font> = asset_server.load("fonts/TrigramLight-w1XDz.ttf");
+
+        ui_state.status = GameFSM::Menu;
+
+        ui_state.menu_entity = Some(
+            commands
+                .spawn(NodeBundle {
+                    style: Style {
+                        flex_direction: FlexDirection::Column,
+                        align_self: AlignSelf::Center,
+                        margin: UiRect {
+                            left: Val::Auto,
+                            right: Val::Auto,
+                            ..default()
+                        },
+                        size: Size {
+                            width: Val::Percent(30.),
+                            height: Val::Percent(60.),
+                        },
+                        ..default()
+                    },
+                    background_color: MENU_BG.into(),
+                    ..default()
+                })
+                .with_children(|parent| {
+                    parent
+                        .spawn(std_bttn())
+                        .with_children(|parent| {
+                            parent.spawn(std_txt("Новая игра", &font));
+                        })
+                        .insert(ButtonTag {
+                            tag: Buttons::MainMenuButton(MainMenuButtons::NewGame),
+                        });
+                    parent
+                        .spawn(std_bttn())
+                        .with_children(|parent| {
+                            parent.spawn(std_txt("Загрузить игру", &font));
+                        })
+                        .insert(ButtonTag {
+                            tag: Buttons::MainMenuButton(MainMenuButtons::LoadGame),
+                        });
+                    parent
+                        .spawn(std_bttn())
+                        .with_children(|parent| {
+                            parent.spawn(std_txt("Опции", &font));
+                        })
+                        .insert(ButtonTag {
+                            tag: Buttons::MainMenuButton(MainMenuButtons::Options),
+                        });
+                    parent
+                        .spawn(std_bttn())
+                        .with_children(|parent| {
+                            parent.spawn(std_txt("Выход", &font));
+                        })
+                        .insert(ButtonTag {
+                            tag: Buttons::MainMenuButton(MainMenuButtons::Exit),
+                        });
+                })
+                .id(),
+        )
+    }
+    for _ in ev_close__main_menu.iter() {
+        match ui_state.menu_entity {
+            Some(me) => {
+                commands.entity(me).despawn_recursive();
+                ui_state.menu_entity = None;
+                ui_state.status = GameFSM::Game;
+            }
+            None => {}
+        }
+    }
 }

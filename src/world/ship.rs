@@ -10,9 +10,9 @@ use super::{Cell, Game, Vec3i32};
 
 use rand::prelude::*;
 
-const SHIP_X: i32 = 30;
-const SHIP_Y: i32 = 30;
-const SHIP_Z: i32 = 1;
+const SHIP_X: i32 = 20;
+const SHIP_Y: i32 = 20;
+const SHIP_Z: i32 = 3;
 
 pub fn ship_startup(
     mut commands: Commands,
@@ -40,7 +40,8 @@ pub fn ship_startup(
     let _dld = 10.0;
     let _dad = 10.0;
 
-    game.ground = Some(
+    game.ground = None;
+    /* Some(
         commands
             .spawn(PbrBundle {
                 mesh: meshes.add(Mesh::from(shape::Box {
@@ -66,6 +67,7 @@ pub fn ship_startup(
             )))
             .id(),
     );
+    */
 
     game.map.cells = (0..SHIP_X)
         .map(|i| {
@@ -75,12 +77,25 @@ pub fn ship_startup(
                         .map(|k| {
                             let mut rng = rand::thread_rng();
                             let rwall: f64 = rng.gen();
+                            let s_x = SHIP_X as f32;
+                            let s_y = SHIP_Y as f32;
+                            let i_f = i as f32;
+                            let j_f = j as f32;
                             if (k < 1)
-                                || ((k < 2) && (rwall > 0.5))
-                                || ((k < 3) && (rwall > 0.7))
-                                || ((k >= 3) && (rwall > 0.9))
+                                || ((k < 2) && (rwall > 0.3))
+                                || ((k < 3)
+                                    && (rwall > 0.3)
+                                    && (j_f > s_x * 0.2 && j_f < s_x * 0.8)
+                                    && (i_f > s_y * 0.2 && i_f < s_y * 0.8))
+                                || ((k < 4)
+                                    && (rwall > 0.3)
+                                    && (j_f > s_x * 0.3 && j_f < s_x * 0.7)
+                                    && (i_f > s_y * 0.3 && i_f < s_y * 0.7))
+                                || ((k >= 4)
+                                    && (rwall > 0.3)
+                                    && (j_f > s_x * 0.4 && j_f < s_x * 0.6)
+                                    && (i_f > s_y * 0.4 && i_f < s_y * 0.6))
                             {
-                                info!("k: {k}, rw: {rwall}");
                                 game.players.push(Some(
                                     commands
                                         .spawn(PbrBundle {
@@ -96,7 +111,7 @@ pub fn ship_startup(
                                             ..default()
                                         })
                                         .insert(Collider::cuboid(1., 1., 1.))
-                                        .insert(RigidBody::Dynamic)
+                                        .insert(RigidBody::KinematicPositionBased)
                                         .insert(ColliderDebugColor(Color::RED))
                                         .insert(Restitution {
                                             coefficient: 0.7,
@@ -105,7 +120,7 @@ pub fn ship_startup(
                                         .insert(Selected { selection: false })
                                         .insert(TransformBundle::from(Transform::from_xyz(
                                             2.0 * (i as f32),
-                                            4.0 * (k as f32),
+                                            2.0 * (k as f32),
                                             2.0 * (j as f32),
                                         )))
                                         .id(),

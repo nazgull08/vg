@@ -3,6 +3,19 @@ pub mod ship;
 use bevy::prelude::{Entity, Resource, Vec3};
 
 #[derive(Resource, Default)]
+pub struct UIFiniteStateMachine {
+    pub status: GameFSM,
+    pub menu_entity: Option<Entity>,
+}
+
+#[derive(Resource, Default)]
+pub enum GameFSM {
+    #[default]
+    Menu,
+    Game,
+}
+
+#[derive(Resource, Default)]
 pub struct Game {
     pub players: Vec<Option<Entity>>,
     pub ground: Option<Entity>,

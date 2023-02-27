@@ -1,4 +1,7 @@
-{ pkgs ? import <nixpkgs> {            config.allowUnfree = true; } }:
+{ pkgs ? import <nixpkgs> {
+  config.allowUnfree = true;
+
+} }:
 
 let
   fenix = import (fetchTarball "https://github.com/nix-community/fenix/archive/main.tar.gz") { };
