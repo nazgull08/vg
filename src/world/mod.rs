@@ -6,6 +6,7 @@ use bevy::prelude::{Entity, Resource, Vec3};
 pub struct UIFiniteStateMachine {
     pub status: GameFSM,
     pub menu_entity: Option<Entity>,
+    pub unit_bar_entity: Option<Entity>,
 }
 
 #[derive(Resource, Default)]

@@ -29,7 +29,7 @@ use voidgrinder::{
     ui::{
         buttons::systems::{button_system, main_menu_button_system},
         main_menu::{main_menu_setup, main_menu_system},
-        menu_control::menu_control_system,
+        menu_control::menu_control_system, unit_bar::{unit_bar_system, unit_bar_setup},
     },
     units::{eyelegger::spawn_eye_legger, ball::spawn_ball},
     world::{ship::ship_startup, Game, UIFiniteStateMachine},
@@ -42,6 +42,8 @@ fn main() {
         .add_event::<SpawnEyeLegger>()
         .add_event::<OpenMenu>()
         .add_event::<CloseMenu>()
+        .add_event::<OpenUnitBar>()
+        .add_event::<CloseUnitBar>()
         .insert_resource(AtmosphereModel::new(Gradient {
             sky: Color::BLACK,
             horizon: Color::BLACK,
@@ -69,6 +71,7 @@ fn main() {
         })
         .add_system(clean_forces)
         .add_system(menu_control_system)
+        .add_system(unit_bar_system)
         .add_system(main_menu_system)
         .add_system(pan_orbit_camera)
         .add_system(cast_ray)

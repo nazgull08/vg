@@ -11,16 +11,10 @@ pub fn hovered_entity_tracker(
     match selected.value {
         Some(sel_ent) => match hovered.value {
             Some(ent) => {
-                if sel_ent != ent {
-                    let color = Color::BLUE;
-                    commands.entity(ent).insert(ColliderDebugColor(color));
-                };
                 match hovered.last {
                     Some(ent_last) => {
                         if sel_ent != ent_last {
                             if ent != ent_last {
-                                let color = Color::RED;
-                                commands.entity(ent_last).insert(ColliderDebugColor(color));
                                 hovered.last = Some(ent);
                             }
                         }

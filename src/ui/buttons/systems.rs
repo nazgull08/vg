@@ -1,7 +1,7 @@
 use bevy::{app::AppExit, prelude::*};
 
 use crate::{
-    events::{SpawnEyeLegger, SpawnBall},
+    events::{SpawnEyeLegger, SpawnBall, CloseMenu, OpenUnitBar},
     ui::buttons::{
         rules::PRESSED_BUTTON,
         types::{Buttons, MainMenuButtons},
@@ -105,6 +105,8 @@ pub fn main_menu_button_system(
     mut interaction_query: Query<(&Interaction, &ButtonTag), (Changed<Interaction>, With<Button>)>,
     mut exit: EventWriter<AppExit>,
     mut ev_spawn: EventWriter<SpawnBall>,
+    mut ev_close_menu: EventWriter<CloseMenu>,
+    mut ev_open_unit_bar: EventWriter<OpenUnitBar>,
 ) {
     for (interaction, bt_tag) in &mut interaction_query {
         match *interaction {
@@ -112,7 +114,11 @@ pub fn main_menu_button_system(
                 info!("Button: {:?}", bt_tag);
                 match &bt_tag.tag {
                     Buttons::MainMenuButton(m_m_b) => match m_m_b {
-                        MainMenuButtons::NewGame => ev_spawn.send(SpawnBall),
+                        MainMenuButtons::NewGame => {
+                            ev_spawn.send(SpawnBall);
+                            ev_close_menu.send(CloseMenu);
+                            ev_open_unit_bar.send(OpenUnitBar);
+                        },
                         MainMenuButtons::LoadGame => {}
                         MainMenuButtons::Options => {}
                         MainMenuButtons::Exit => {
