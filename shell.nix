@@ -41,7 +41,7 @@ pkgs.mkShell {
     udev
     alsaLib
     lutris
-    xlibsWrapper
+    
     xorg.libXcursor
     xorg.libXrandr
     xorg.libXi
