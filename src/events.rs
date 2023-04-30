@@ -6,4 +6,3 @@ pub struct CloseMenu;
 
 pub struct OpenUnitBar;
 pub struct CloseUnitBar;
-

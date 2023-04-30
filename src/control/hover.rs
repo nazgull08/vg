@@ -10,21 +10,19 @@ pub fn hovered_entity_tracker(
 ) {
     match selected.value {
         Some(sel_ent) => match hovered.value {
-            Some(ent) => {
-                match hovered.last {
-                    Some(ent_last) => {
-                        if sel_ent != ent_last {
-                            if ent != ent_last {
-                                hovered.last = Some(ent);
-                            }
+            Some(ent) => match hovered.last {
+                Some(ent_last) => {
+                    if sel_ent != ent_last {
+                        if ent != ent_last {
+                            hovered.last = Some(ent);
                         }
                     }
-                    None => {
-                        hovered.last = Some(ent);
-                        return;
-                    }
                 }
-            }
+                None => {
+                    hovered.last = Some(ent);
+                    return;
+                }
+            },
             None => match hovered.last {
                 Some(ent_last) => {
                     if ent_last != sel_ent {

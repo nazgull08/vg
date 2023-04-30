@@ -1,6 +1,6 @@
 
 [package]
-name = "voidgrinder11"
+name = "voidgrinder"
 version = "0.1.0"
 authors = ["nazgull08 <nazgull08@protonmail.com"]
 edition = "2021"

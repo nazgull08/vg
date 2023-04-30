@@ -29,9 +29,10 @@ use voidgrinder::{
     ui::{
         buttons::systems::{button_system, main_menu_button_system},
         main_menu::{main_menu_setup, main_menu_system},
-        menu_control::menu_control_system, unit_bar::{unit_bar_system, unit_bar_setup},
+        menu_control::menu_control_system,
+        unit_bar::{unit_bar_setup, unit_bar_system},
     },
-    units::{eyelegger::spawn_eye_legger, ball::spawn_ball},
+    units::{ball::spawn_ball, eyelegger::spawn_eye_legger},
     world::{ship::ship_startup, Game, UIFiniteStateMachine},
 };
 

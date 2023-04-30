@@ -1,7 +1,7 @@
 use bevy::{prelude::*, ui::PositionType};
 
 use crate::{
-    events::{CloseMenu, OpenMenu, OpenUnitBar, CloseUnitBar},
+    events::{CloseMenu, CloseUnitBar, OpenMenu, OpenUnitBar},
     world::{GameFSM, UIFiniteStateMachine},
 };
 
@@ -60,7 +60,7 @@ pub fn unit_bar_system(
                         });
                 })
                 .id(),
-            );
+        );
     }
     for _ in ev_close_unit_bar.iter() {
         match ui_state.menu_entity {

@@ -1,7 +1,7 @@
 use bevy::{app::AppExit, prelude::*};
 
 use crate::{
-    events::{SpawnEyeLegger, SpawnBall, CloseMenu, OpenUnitBar},
+    events::{CloseMenu, OpenUnitBar, SpawnBall, SpawnEyeLegger},
     ui::buttons::{
         rules::PRESSED_BUTTON,
         types::{Buttons, MainMenuButtons},
@@ -118,7 +118,7 @@ pub fn main_menu_button_system(
                             ev_spawn.send(SpawnBall);
                             ev_close_menu.send(CloseMenu);
                             ev_open_unit_bar.send(OpenUnitBar);
-                        },
+                        }
                         MainMenuButtons::LoadGame => {}
                         MainMenuButtons::Options => {}
                         MainMenuButtons::Exit => {
