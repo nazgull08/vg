@@ -1,8 +1,8 @@
-use bevy::{prelude::*, ui::PositionType};
+use bevy::prelude::*;
 
 use crate::{
     events::{CloseMenu, OpenMenu},
-    world::{Game, GameFSM, UIFiniteStateMachine},
+    world::{GameFSM, UIFiniteStateMachine},
 };
 
 pub fn menu_control_system(

@@ -1,12 +1,12 @@
-use bevy::{prelude::*, ui::PositionType};
+use bevy::prelude::*;
 
 use crate::{
-    events::{CloseMenu, CloseUnitBar, OpenMenu, OpenUnitBar},
+    events::{CloseUnitBar, OpenUnitBar},
     world::{GameFSM, UIFiniteStateMachine},
 };
 
 use super::buttons::{
-    rules::{std_bttn, std_txt, MENU_BG, NORMAL_BUTTON, STD_SIZE},
+    rules::{std_bttn, std_txt, MENU_BG},
     types::{ButtonTag, Buttons, MainMenuButtons},
 };
 
