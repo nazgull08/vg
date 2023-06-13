@@ -13,7 +13,7 @@ pub fn hovered_entity_tracker(
             Some(ent) => match hovered.last {
                 Some(ent_last) => {
                     if sel_ent != ent_last && ent != ent_last {
-                       hovered.last = Some(ent);
+                        hovered.last = Some(ent);
                     }
                 }
                 None => {
