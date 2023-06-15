@@ -40,8 +40,6 @@ fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
         .add_event::<SpawnBall>()
-        .add_event::<SpawnEyeLegger>()
-        .add_event::<OpenMenu>()
         .add_event::<CloseMenu>()
         .add_event::<OpenUnitBar>()
         .add_event::<CloseUnitBar>()
