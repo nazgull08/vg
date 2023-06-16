@@ -50,14 +50,6 @@ pub fn unit_bar_system(
                     ..default()
                 })
                 .with_children(|parent| {
-                    parent
-                        .spawn(std_bttn())
-                        .with_children(|parent| {
-                            parent.spawn(std_txt("Новая игра", &font));
-                        })
-                        .insert(ButtonTag {
-                            tag: Buttons::MainMenuButton(MainMenuButtons::NewGame),
-                        });
                 })
                 .id(),
         );
