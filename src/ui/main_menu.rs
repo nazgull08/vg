@@ -11,9 +11,7 @@ use super::buttons::{
 };
 
 pub fn main_menu_setup(
-    mut commands: Commands,
     mut ev_spawn_main_menu: EventWriter<OpenMenu>,
-    mut ui_state: ResMut<UIFiniteStateMachine>,
 ) {
     ev_spawn_main_menu.send(OpenMenu);
 }
@@ -22,7 +20,7 @@ pub fn main_menu_system(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     mut ev_spawn_main_menu: EventReader<OpenMenu>,
-    mut ev_close__main_menu: EventReader<CloseMenu>,
+    mut ev_close_main_menu: EventReader<CloseMenu>,
     mut ui_state: ResMut<UIFiniteStateMachine>,
 ) {
     for _ in ev_spawn_main_menu.iter() {
@@ -35,6 +33,25 @@ pub fn main_menu_system(
         ui_state.menu_entity = Some(
             commands
                 .spawn(NodeBundle {
+                    style: Style {
+                        flex_direction: FlexDirection::Column,
+                        align_self: AlignSelf::Center,
+                        margin: UiRect {
+                            left: Val::Auto,
+                            right: Val::Auto,
+                            ..default()
+                        },
+                        size: Size {
+                            width: Val::Percent(100.),
+                            height: Val::Percent(100.),
+                        },
+                        ..default()
+                    },
+                    background_color: Color::CRIMSON.into(),
+                    ..default()
+                })
+                .with_children(|child|{
+                child.spawn(NodeBundle {
                     style: Style {
                         flex_direction: FlexDirection::Column,
                         align_self: AlignSelf::Center,
@@ -85,11 +102,12 @@ pub fn main_menu_system(
                         .insert(ButtonTag {
                             tag: Buttons::MainMenuButton(MainMenuButtons::Exit),
                         });
+                });
                 })
                 .id(),
         )
     }
-    for _ in ev_close__main_menu.iter() {
+    for _ in ev_close_main_menu.iter() {
         match ui_state.menu_entity {
             Some(me) => {
                 commands.entity(me).despawn_recursive();

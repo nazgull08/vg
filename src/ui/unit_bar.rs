@@ -26,13 +26,29 @@ pub fn unit_bar_system(
     mut ui_state: ResMut<UIFiniteStateMachine>,
 ) {
     for _ in ev_spawn_unit_bar.iter() {
-        // ui camera
-        //let font:Handle<Font> = asset_server.load("fonts/FiraSans-Bold.ttf");
         let font: Handle<Font> = asset_server.load("fonts/TrigramLight-w1XDz.ttf");
 
         ui_state.unit_bar_entity = Some(
             commands
                 .spawn(NodeBundle {
+                    style: Style {
+                        flex_direction: FlexDirection::Column,
+                        align_self: AlignSelf::Center,
+                        margin: UiRect {
+                            top: Val::Auto,
+                            ..default()
+                        },
+                        size: Size {
+                            width: Val::Percent(100.),
+                            height: Val::Percent(100.),
+                        },
+                        ..default()
+                    },
+                    background_color: Color::AQUAMARINE.into(),
+                    ..default()
+                })
+                .with_children(|parent| {
+                parent.spawn(NodeBundle {
                     style: Style {
                         flex_direction: FlexDirection::Column,
                         align_self: AlignSelf::Center,
@@ -48,9 +64,7 @@ pub fn unit_bar_system(
                     },
                     background_color: MENU_BG.into(),
                     ..default()
-                })
-                .with_children(|parent| {
-                })
+                });})
                 .id(),
         );
     }
