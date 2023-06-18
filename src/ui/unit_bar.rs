@@ -48,23 +48,24 @@ pub fn unit_bar_system(
                     ..default()
                 })
                 .with_children(|parent| {
-                parent.spawn(NodeBundle {
-                    style: Style {
-                        flex_direction: FlexDirection::Column,
-                        align_self: AlignSelf::Center,
-                        margin: UiRect {
-                            top: Val::Auto,
+                    parent.spawn(NodeBundle {
+                        style: Style {
+                            flex_direction: FlexDirection::Column,
+                            align_self: AlignSelf::Center,
+                            margin: UiRect {
+                                top: Val::Auto,
+                                ..default()
+                            },
+                            size: Size {
+                                width: Val::Percent(100.),
+                                height: Val::Percent(20.),
+                            },
                             ..default()
                         },
-                        size: Size {
-                            width: Val::Percent(100.),
-                            height: Val::Percent(20.),
-                        },
+                        background_color: MENU_BG.into(),
                         ..default()
-                    },
-                    background_color: MENU_BG.into(),
-                    ..default()
-                });})
+                    });
+                })
                 .id(),
         );
     }
