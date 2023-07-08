@@ -1,10 +1,10 @@
-use bevy::prelude::*;
+use bevy::{prelude::*, window::PrimaryWindow};
 use bevy_rapier3d::prelude::{QueryFilter, RapierContext};
 
 use crate::control::types::HoveredEntity;
 
 pub fn cast_ray(
-    windows: Res<Windows>,
+    windows: Res<PrimaryWindow>,
     rapier_context: Res<RapierContext>,
     cameras: Query<(&Camera, &GlobalTransform)>,
     mut hovered: ResMut<HoveredEntity>,
