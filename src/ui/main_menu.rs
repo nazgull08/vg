@@ -39,10 +39,8 @@ pub fn main_menu_system(
                             right: Val::Auto,
                             ..default()
                         },
-                        size: Size {
-                            width: Val::Percent(100.),
-                            height: Val::Percent(100.),
-                        },
+                        width: Val::Percent(100.),
+                        height: Val::Percent(100.),
                         ..default()
                     },
                     background_color: Color::CRIMSON.into(),
@@ -59,10 +57,8 @@ pub fn main_menu_system(
                                     right: Val::Auto,
                                     ..default()
                                 },
-                                size: Size {
-                                    width: Val::Percent(30.),
-                                    height: Val::Percent(60.),
-                                },
+                                width: Val::Percent(30.),
+                                height: Val::Percent(60.),
                                 ..default()
                             },
                             background_color: MENU_BG.into(),

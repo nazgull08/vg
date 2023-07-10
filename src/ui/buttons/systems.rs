@@ -18,18 +18,16 @@ pub fn setup_button(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands
         .spawn(ButtonBundle {
             style: Style {
-                size: Size::new(Val::Px(150.0), Val::Px(65.0)),
+                width: Val::Px(150.0),
+                height: Val::Px(65.0),
                 // horizontally center child text
                 justify_content: JustifyContent::Center,
                 // vertically center child text
                 align_items: AlignItems::Center,
                 // position
                 position_type: PositionType::Absolute,
-                position: UiRect {
-                    top: Val::Px(250.0),
-                    right: Val::Px(300.0),
-                    ..default()
-                },
+                top: Val::Px(250.0),
+                right: Val::Px(300.0),
                 ..default()
             },
             background_color: NORMAL_BUTTON.into(),
@@ -49,18 +47,16 @@ pub fn setup_button(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands
         .spawn(ButtonBundle {
             style: Style {
-                size: Size::new(Val::Px(150.0), Val::Px(65.0)),
+                width: Val::Px(150.0),
+                height: Val::Px(65.0),
                 // horizontally center child text
                 justify_content: JustifyContent::Center,
                 // vertically center child text
                 align_items: AlignItems::Center,
                 // position
                 position_type: PositionType::Absolute,
-                position: UiRect {
-                    top: Val::Px(400.0),
-                    right: Val::Px(5.0),
-                    ..default()
-                },
+                top: Val::Px(400.0),
+                right: Val::Px(5.0),
                 ..default()
             },
             background_color: NORMAL_BUTTON.into(),
@@ -88,7 +84,7 @@ pub fn button_system(
 ) {
     for (interaction, mut color, children) in &mut interaction_query {
         match *interaction {
-            Interaction::Clicked => {
+            Interaction::Pressed => {
                 *color = PRESSED_BUTTON.into();
             }
             Interaction::Hovered => {
@@ -110,7 +106,7 @@ pub fn main_menu_button_system(
 ) {
     for (interaction, bt_tag) in &mut interaction_query {
         match *interaction {
-            Interaction::Clicked => {
+            Interaction::Pressed => {
                 info!("Button: {:?}", bt_tag);
                 match &bt_tag.tag {
                     Buttons::MainMenuButton(m_m_b) => match m_m_b {

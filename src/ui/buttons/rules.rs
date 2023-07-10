@@ -18,7 +18,8 @@ pub const MENU_BG: Color = Color::Rgba {
 pub fn std_bttn() -> ButtonBundle {
     ButtonBundle {
         style: Style {
-            size: Size::new(Val::Percent(40.0), Val::Percent(15.0)),
+            width: Val::Percent(40.0),
+            height: Val::Percent(15.0),
             // horizontally center child text
             justify_content: JustifyContent::Center,
             // vertically center child text

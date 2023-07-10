@@ -6,9 +6,6 @@ use bevy::{
     prelude::*,
 };
 
-use bevy_atmosphere::prelude::{
-    AtmosphereCamera, AtmosphereModel, AtmospherePlugin, Gradient, Nishita,
-};
 use bevy_rapier3d::{
     prelude::{NoUserData, RapierPhysicsPlugin},
     render::RapierDebugRenderPlugin,
@@ -45,16 +42,10 @@ fn main() {
         .add_event::<OpenMenu>()
         .add_event::<OpenUnitBar>()
         .add_event::<CloseUnitBar>()
-        .insert_resource(AtmosphereModel::new(Gradient {
-            sky: Color::BLACK,
-            horizon: Color::BLACK,
-            ground: Color::BLACK,
-        }))
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::default())
         .add_plugin(RapierDebugRenderPlugin::default())
         .add_plugin(LogDiagnosticsPlugin::default())
         .add_plugin(FrameTimeDiagnosticsPlugin::default())
-        .add_plugin(AtmospherePlugin)
         .add_startup_system(main_menu_setup)
         .add_startup_system(setup_directional_light)
         .add_startup_system(spawn_orbit_camera)
@@ -113,15 +104,6 @@ fn setup_directional_light(mut commands: Commands) {
             illuminance: 10000.0,
             color: Color::BLUE,
             // Configure the projection to better fit the scene
-            shadow_projection: OrthographicProjection {
-                left: -HALF_SIZE,
-                right: HALF_SIZE,
-                bottom: -HALF_SIZE,
-                top: HALF_SIZE,
-                near: -10.0 * HALF_SIZE,
-                far: 10.0 * HALF_SIZE,
-                ..default()
-            },
             shadows_enabled: true,
             ..default()
         },

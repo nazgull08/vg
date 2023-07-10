@@ -27,6 +27,7 @@ pkgs.mkShell {
           rust-std
           rustc
           rustfmt-preview
+          libiconv
         ]
       )
     )

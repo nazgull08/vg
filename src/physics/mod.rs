@@ -171,9 +171,9 @@ pub fn setup_physics(
     players.push(Some(
         commands
             .spawn(PbrBundle {
-                mesh: meshes.add(Mesh::from(shape::Icosphere {
-                    radius: rad,
-                    subdivisions: 8,
+                mesh: meshes.add(Mesh::from(shape::Cube {
+                    size: rad, //radius: rad,
+                               //subdivisions: 8,
                 })),
                 material: material_handle,
                 ..default()
@@ -204,10 +204,7 @@ pub fn setup_physics(
     players.push(Some(
         commands
             .spawn(PbrBundle {
-                mesh: meshes.add(Mesh::from(shape::Icosphere {
-                    radius: rad,
-                    subdivisions: 8,
-                })),
+                mesh: meshes.add(Mesh::from(shape::Cube { size: rad })),
                 material: materials.add(Color::rgb(1.0, 1.0, 1.0).into()),
                 ..default()
             })

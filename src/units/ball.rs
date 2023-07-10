@@ -41,10 +41,7 @@ pub fn spawn_ball(
         game_state.players.push(Some(
             commands
                 .spawn(PbrBundle {
-                    mesh: meshes.add(Mesh::from(shape::Icosphere {
-                        radius: rad,
-                        subdivisions: 8,
-                    })),
+                    mesh: meshes.add(Mesh::from(shape::Cube { size: rad })),
                     material: material_handle2,
                     ..default()
                 })

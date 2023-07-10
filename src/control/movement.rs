@@ -35,7 +35,7 @@ pub fn move_selected(
                 way = Vec3::new(0.0, 0.0, -1.0);
                 moved = true;
             }
-            if keyboard_input.pressed(KeyCode::LControl) {
+            if keyboard_input.pressed(KeyCode::ControlLeft) {
                 way = Vec3::new(0.0, 1.0, 0.0);
                 moved = true;
             }

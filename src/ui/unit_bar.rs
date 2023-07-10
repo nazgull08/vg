@@ -38,10 +38,8 @@ pub fn unit_bar_system(
                             top: Val::Auto,
                             ..default()
                         },
-                        size: Size {
-                            width: Val::Percent(100.),
-                            height: Val::Percent(100.),
-                        },
+                        width: Val::Percent(100.),
+                        height: Val::Percent(100.),
                         ..default()
                     },
                     background_color: Color::AQUAMARINE.into(),
@@ -56,10 +54,8 @@ pub fn unit_bar_system(
                                 top: Val::Auto,
                                 ..default()
                             },
-                            size: Size {
-                                width: Val::Percent(100.),
-                                height: Val::Percent(20.),
-                            },
+                            width: Val::Percent(100.),
+                            height: Val::Percent(20.),
                             ..default()
                         },
                         background_color: MENU_BG.into(),

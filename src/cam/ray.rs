@@ -4,7 +4,7 @@ use bevy_rapier3d::prelude::{QueryFilter, RapierContext};
 use crate::control::types::HoveredEntity;
 
 pub fn cast_ray(
-    primary_window: PrimaryWindow,
+    primary_query: Query<&Window, With<PrimaryWindow>>,
     rapier_context: Res<RapierContext>,
     cameras: Query<(&Camera, &GlobalTransform)>,
     mut hovered: ResMut<HoveredEntity>,
@@ -12,8 +12,10 @@ pub fn cast_ray(
     // We will color in read the colliders hovered by the mouse.
     for (camera, camera_transform) in cameras.iter() {
         // First, compute a ray from the mouse position.
-        let (ray_pos, ray_dir) =
-            ray_from_mouse_position(&primary_window, camera, camera_transform);
+        let Ok(primary) = primary_query.get_single() else {
+            return;
+        };
+        let (ray_pos, ray_dir) = ray_from_mouse_position(&primary, camera, camera_transform);
 
         // Then cast the ray.
         let hit = rapier_context.cast_ray(ray_pos, ray_dir, f32::MAX, true, QueryFilter::new());
@@ -31,7 +33,7 @@ pub fn cast_ray(
 }
 
 pub fn cast_ray_center(
-    primary_window: PrimaryWindow,
+    primary_query: Query<&Window, With<PrimaryWindow>>,
     rapier_context: Res<RapierContext>,
     cameras: Query<(&Camera, &GlobalTransform)>,
     mut hovered: ResMut<HoveredEntity>,
@@ -39,8 +41,10 @@ pub fn cast_ray_center(
     // We will color in read the colliders hovered by the mouse.
     for (camera, camera_transform) in cameras.iter() {
         // First, compute a ray from the mouse position.
-        let (ray_pos, ray_dir) =
-            ray_from_center(primary_window, camera, camera_transform);
+        let Ok(primary) = primary_query.get_single() else {
+            return;
+        };
+        let (ray_pos, ray_dir) = ray_from_center(primary, camera, camera_transform);
 
         // Then cast the ray.
         let hit = rapier_context.cast_ray(ray_pos, ray_dir, f32::MAX, true, QueryFilter::new());
@@ -59,7 +63,7 @@ pub fn cast_ray_center(
 
 // Credit to @doomy on discord.
 pub fn ray_from_mouse_position(
-    window: &PrimaryWindow,
+    window: &Window,
     camera: &Camera,
     camera_transform: &GlobalTransform,
 ) -> (Vec3, Vec3) {
