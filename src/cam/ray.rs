@@ -4,7 +4,7 @@ use bevy_rapier3d::prelude::{QueryFilter, RapierContext};
 use crate::control::types::HoveredEntity;
 
 pub fn cast_ray(
-    windows: Res<PrimaryWindow>,
+    primary_window: PrimaryWindow,
     rapier_context: Res<RapierContext>,
     cameras: Query<(&Camera, &GlobalTransform)>,
     mut hovered: ResMut<HoveredEntity>,
@@ -13,7 +13,7 @@ pub fn cast_ray(
     for (camera, camera_transform) in cameras.iter() {
         // First, compute a ray from the mouse position.
         let (ray_pos, ray_dir) =
-            ray_from_mouse_position(windows.get_primary().unwrap(), camera, camera_transform);
+            ray_from_mouse_position(&primary_window, camera, camera_transform);
 
         // Then cast the ray.
         let hit = rapier_context.cast_ray(ray_pos, ray_dir, f32::MAX, true, QueryFilter::new());
@@ -31,7 +31,7 @@ pub fn cast_ray(
 }
 
 pub fn cast_ray_center(
-    windows: Res<Windows>,
+    primary_window: PrimaryWindow,
     rapier_context: Res<RapierContext>,
     cameras: Query<(&Camera, &GlobalTransform)>,
     mut hovered: ResMut<HoveredEntity>,
@@ -40,7 +40,7 @@ pub fn cast_ray_center(
     for (camera, camera_transform) in cameras.iter() {
         // First, compute a ray from the mouse position.
         let (ray_pos, ray_dir) =
-            ray_from_center(windows.get_primary().unwrap(), camera, camera_transform);
+            ray_from_center(primary_window, camera, camera_transform);
 
         // Then cast the ray.
         let hit = rapier_context.cast_ray(ray_pos, ray_dir, f32::MAX, true, QueryFilter::new());
@@ -59,7 +59,7 @@ pub fn cast_ray_center(
 
 // Credit to @doomy on discord.
 pub fn ray_from_mouse_position(
-    window: &Window,
+    window: &PrimaryWindow,
     camera: &Camera,
     camera_transform: &GlobalTransform,
 ) -> (Vec3, Vec3) {
