@@ -1,10 +1,7 @@
-# To update nix-prefetch-git https://github.com/NixOS/nixpkgs-channels
+# To update nix-prefetch-git https://github.com/NixOS/nixpkgs
 import ((import <nixpkgs> {}).fetchFromGitHub {
   owner = "NixOS";
-  repo = "nixpkgs-channels";
-  rev = "4762fba469e2baa82f983b262e2c06ac2fdaae67";
-  sha256  = "1sidky93vc2bpnwb8avqlym1p70h2szhkfiam549377v9r5ld2r1";
+  repo = "nixpkgs";
+  rev = "57eac89459226f3ec743ffa6bbbc1042f5836843";
+  sha256  = "sha256:19820jsr4na0a2d0xfv0qdmz22r4qmq6kpv1fr3hwv79v1ns5kb0";
 })
-
-
-
