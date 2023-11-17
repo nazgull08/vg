@@ -71,9 +71,9 @@ pub fn unit_bar_system(
     }
     for _ in ev_close_unit_bar.iter() {
         if let Some(me) = ui_state.menu_entity {
-                commands.entity(me).despawn_recursive();
-                ui_state.menu_entity = None;
-                ui_state.status = GameFSM::Game;
+            commands.entity(me).despawn_recursive();
+            ui_state.menu_entity = None;
+            ui_state.status = GameFSM::Game;
         }
     }
 }
