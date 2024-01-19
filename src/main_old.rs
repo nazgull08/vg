@@ -6,6 +6,12 @@ use bevy::{
     prelude::*,
 };
 
+<<<<<<< HEAD
+=======
+use bevy_atmosphere::prelude::{
+    AtmosphereCamera, AtmosphereModel, AtmospherePlugin, Gradient, Nishita,
+};
+>>>>>>> c98859257774433af1f306e574edcee48e6c2fbb
 use bevy_rapier3d::{
     prelude::{NoUserData, RapierPhysicsPlugin},
     render::RapierDebugRenderPlugin,
@@ -36,12 +42,23 @@ use voidgrinder::{
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
+<<<<<<< HEAD
         .add_event::<SpawnBall>()
         .add_event::<SpawnEyeLegger>()
+=======
+>>>>>>> c98859257774433af1f306e574edcee48e6c2fbb
         .add_event::<CloseMenu>()
         .add_event::<OpenMenu>()
         .add_event::<OpenUnitBar>()
         .add_event::<CloseUnitBar>()
+<<<<<<< HEAD
+=======
+        .insert_resource(AtmosphereModel::new(Gradient {
+            sky: Color::BLACK,
+            horizon: Color::BLACK,
+            ground: Color::BLACK,
+        }))
+>>>>>>> c98859257774433af1f306e574edcee48e6c2fbb
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::default())
         .add_plugin(RapierDebugRenderPlugin::default())
         .add_plugin(LogDiagnosticsPlugin::default())
@@ -49,7 +66,10 @@ fn main() {
         .add_startup_system(main_menu_setup)
         .add_startup_system(setup_directional_light)
         .add_startup_system(spawn_orbit_camera)
+<<<<<<< HEAD
         .add_startup_system(ship_startup)
+=======
+>>>>>>> c98859257774433af1f306e574edcee48e6c2fbb
         .init_resource::<Game>()
         .init_resource::<UIFiniteStateMachine>()
         .insert_resource(MoveCDTimer(Timer::from_seconds(1.0, TimerMode::Repeating)))
@@ -61,6 +81,7 @@ fn main() {
             value: None,
             last: None,
         })
+<<<<<<< HEAD
         .add_system(clean_forces)
         .add_system(menu_control_system)
         .add_system(unit_bar_system)
@@ -73,6 +94,8 @@ fn main() {
         .add_system(main_menu_button_system)
         .add_system(spawn_ball)
         .add_system(move_selected)
+=======
+>>>>>>> c98859257774433af1f306e574edcee48e6c2fbb
         .run();
 }
 
@@ -104,6 +127,18 @@ fn setup_directional_light(mut commands: Commands) {
             illuminance: 10000.0,
             color: Color::BLUE,
             // Configure the projection to better fit the scene
+<<<<<<< HEAD
+=======
+            shadow_projection: OrthographicProjection {
+                left: -HALF_SIZE,
+                right: HALF_SIZE,
+                bottom: -HALF_SIZE,
+                top: HALF_SIZE,
+                near: -10.0 * HALF_SIZE,
+                far: 10.0 * HALF_SIZE,
+                ..default()
+            },
+>>>>>>> c98859257774433af1f306e574edcee48e6c2fbb
             shadows_enabled: true,
             ..default()
         },
