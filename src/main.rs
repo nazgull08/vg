@@ -37,8 +37,6 @@ use voidgrinder::{
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_event::<SpawnBall>()
-        .add_event::<SpawnEyeLegger>()
         .add_event::<CloseMenu>()
         .add_event::<OpenMenu>()
         .add_event::<OpenUnitBar>()

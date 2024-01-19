@@ -14,17 +14,15 @@ pub fn menu_control_system(
     match ui_state.status {
         GameFSM::Menu => {
             if keyboard_input.just_released(KeyCode::Escape) {
-                match ui_state.menu_entity {
-                    Some(_) => ev_close_main_menu.send(CloseMenu),
-                    None => {}
+                if let Some(_) = ui_state.menu_entity {
+                    ev_close_main_menu.send(CloseMenu)
                 }
             }
         }
         GameFSM::Game => {
             if keyboard_input.just_released(KeyCode::Escape) {
-                match ui_state.menu_entity {
-                    Some(_) => {}
-                    None => ev_open_main_menu.send(OpenMenu),
+                if let None = ui_state.menu_entity {
+                    ev_open_main_menu.send(OpenMenu)
                 }
             }
         }

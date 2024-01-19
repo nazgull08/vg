@@ -38,7 +38,7 @@ pkgs.mkShell {
     clang
 
     # # bevy-specific deps (from https://github.com/bevyengine/bevy/blob/main/docs/linux_dependencies.md)
-    pkgconfig
+    pkg-config
     udev
     alsaLib
     lutris
